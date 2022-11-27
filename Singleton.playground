@@ -1,0 +1,49 @@
+import UIKit
+
+class ThemeManager: NSObject {
+    
+    static var shared: ThemeManager = {
+        let instance = ThemeManager()
+        return instance
+    }()
+    
+    private var colorDictionary: [String: String]?
+    private var cornerRadiusDictionary: [String: CGFloat]?
+    private var fontsDictionary: [String: String]?
+    
+    private override init() {
+        super.init()
+        setResourcesDictionaries()
+    }
+    
+    private func setResourcesDictionaries() {
+        let resourceFileName = "Theme"
+        let kPlistExtension = ".plist"
+        if let path = Bundle.main.url(forResource: resourceFileName, withExtension: kPlistExtension) {
+            let resources = NSDictionary(contentsOf: path)
+            colorDictionary = resources?.object(forKey: "Colors") as? [String: String]
+            cornerRadiusDictionary = resources?.object(forKey: "BorderRadius") as? [String: CGFloat]
+            fontsDictionary = resources?.object(forKey: "Fonts") as? [String: String]
+        }
+    }
+    
+    var mainColor: UIColor {
+        return UIColor(hexString: colorDictionary!["mainColor"]!)
+    }
+    
+    var secondaryColor: UIColor {
+        return UIColor(hexString: colorDictionary!["secondaryColor"]!)
+    }
+    
+    var thirdColor: UIColor {
+        return UIColor(hexString: colorDictionary!["thirdColor"]!)
+    }
+    
+    var buttonBorderRadius: CGFloat {
+        return cornerRadiusDictionary!["buttonBorderRadius"]!
+    }
+    
+    var mainFont: String {
+        return fontsDictionary!["mainFont"]!
+    }
+}
